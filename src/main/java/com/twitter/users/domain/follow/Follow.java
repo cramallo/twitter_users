@@ -9,6 +9,6 @@ import lombok.Data;
 @Builder
 public class Follow {
     private Long id;
-    private Long followerId;
-    private Long followeeId;
+    private String follower;
+    private String followee;
 }

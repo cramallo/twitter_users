@@ -1,17 +1,21 @@
 package com.twitter.users.infraestructure.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "follow")
+@Table(name = "follow", uniqueConstraints={@UniqueConstraint(columnNames = {"follower", "followee"})})
 @Data
 @Builder
 @AllArgsConstructor
@@ -22,11 +26,11 @@ public class FollowEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    //@ManyToOne(cascade = CascadeType.ALL)
-    //@JoinColumn(name = "id")
-    private Long follower;
+    @ManyToOne
+    @JoinColumn(name = "follower", referencedColumnName="name")
+    private UserEntity follower;
 
-    //@ManyToOne(cascade = CascadeType.ALL)
-    //@JoinColumn(name = "id")
-    private Long followee;
+    @ManyToOne
+    @JoinColumn(name = "followee", referencedColumnName="name")
+    private UserEntity followee;
 }

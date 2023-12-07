@@ -13,4 +13,5 @@ public class UserService {
     public User findByName(final String name) {
         return userRepository.findByName(name);
     }
+
 }

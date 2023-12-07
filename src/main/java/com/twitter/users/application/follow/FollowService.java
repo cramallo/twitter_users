@@ -6,6 +6,7 @@ import com.twitter.users.application.user.UserService;
 import com.twitter.users.domain.follow.Follow;
 import com.twitter.users.domain.follow.FollowRepository;
 import com.twitter.users.domain.shared.NotificationEventsService;
+import com.twitter.users.domain.shared.PageDomain;
 import com.twitter.users.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,14 @@ public class FollowService {
         return createdFollow;
     }
 
-    private Follow createFollow(final User follower, final User followee) {
-        return followRepository.save(follower.getId(), followee.getId());
+   public PageDomain<Follow> getFolloweesByFollowerName(final String followerName,
+                                                        final long offset) {
+
+        return followRepository.findFolloweesByFollowerName(followerName, offset);
     }
+
+    private Follow createFollow(final User follower, final User followee) {
+        return followRepository.save(follower, followee);
+    }
+
 }
