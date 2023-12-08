@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface JpaFollowRepository extends JpaRepository<FollowEntity, Long> {
 
     Page<FollowEntity> findByFollowerName(String followerName, Pageable pageable);
+
+    Page<FollowEntity> findByFolloweeName(String followeeName, Pageable pageable);
 }

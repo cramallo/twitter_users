@@ -27,15 +27,15 @@ public class FollowControllerTest {
     private FollowService followService;
 
     @Test
-    @DisplayName("When all params sent and execute successfully then success")
-    void testSuccess() throws Exception {
+    @DisplayName("When send new follow and all params sent and execute successfully then success")
+    void testSuccessNewFollow() throws Exception {
         // GIVEN
         final var requestJsonBody = new JSONObject().put("followee", FOLLOWEE_USER_NAME);
 
         // WHEN
         final var result = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/follow")
+                        .put("/follows/follow")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("user_name", FOLLOWER_USER_NAME)
                         .content(requestJsonBody.toString())
@@ -47,15 +47,15 @@ public class FollowControllerTest {
     }
 
     @Test
-    @DisplayName("When header is not sent then throw bad request")
-    void testFail() throws Exception {
+    @DisplayName("When send new follow and header is not sent then throw bad request")
+    void testFailNewFollow() throws Exception {
         // GIVEN
         final var requestJsonBody = new JSONObject().put("followee", FOLLOWEE_USER_NAME);
 
         // WHEN
         final var result = mvc.perform(
                 MockMvcRequestBuilders
-                        .put("/follow")
+                        .put("/follows/follow")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJsonBody.toString())
         );

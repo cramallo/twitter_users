@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.twitter.users.application.user.UserService;
 import com.twitter.users.domain.follow.Follow;
 import com.twitter.users.domain.follow.FollowRepository;
-import com.twitter.users.domain.shared.NotificationEventsService;
-import com.twitter.users.domain.shared.PageDomain;
+import com.twitter.users.application.NotificationGateway;
+import com.twitter.users.application.PageDomain;
 import com.twitter.users.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ public class FollowService {
 
     private FollowRepository followRepository;
     private UserService userService;
-    private NotificationEventsService<Follow> notificationEventsService;
+    private NotificationGateway<Follow> notificationGateway;
 
     public Follow follow(final String followerName, final String followeeName) {
 
@@ -29,7 +29,7 @@ public class FollowService {
         final var createdFollow = createFollow(follower, followee);
 
         try {
-            notificationEventsService.send(createdFollow);
+            notificationGateway.send(createdFollow);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -37,10 +37,16 @@ public class FollowService {
         return createdFollow;
     }
 
-   public PageDomain<Follow> getFolloweesByFollowerName(final String followerName,
-                                                        final long offset) {
+    public PageDomain<Follow> getFolloweesByFollowerName(final String followerName,
+                                                         final long offset) {
 
         return followRepository.findFolloweesByFollowerName(followerName, offset);
+    }
+
+    public PageDomain<Follow> getFollowersByFolloweeName(final String followerName,
+                                                         final long offset) {
+
+        return followRepository.findFollowersByFolloweeName(followerName, offset);
     }
 
     private Follow createFollow(final User follower, final User followee) {

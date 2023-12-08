@@ -1,12 +1,15 @@
 package com.twitter.users.infraestructure.controllers.follow;
 
+import com.twitter.users.application.PageDomain;
 import com.twitter.users.application.follow.FollowService;
+import com.twitter.users.domain.follow.Follow;
 import com.twitter.users.infraestructure.controllers.follow.requests.FollowRequest;
 import com.twitter.users.infraestructure.controllers.follow.responses.FollowResponse;
-import com.twitter.users.infraestructure.controllers.shared.PageResponse;
+import com.twitter.users.infraestructure.controllers.PageResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -34,12 +37,25 @@ public class FollowController {
         return ResponseEntity.ok(FOLLOW_PROCESSED);
     }
 
-    @GetMapping("followees")
-    public PageResponse<FollowResponse> getFollowees(@RequestHeader("user_name") final String userName,
-                                                     @RequestParam long offset) {
+    @GetMapping("/followees")
+    public PageResponse<FollowResponse> getFolloweessByFollower(@RequestHeader("user_name") final String userName,
+                                                                @RequestParam long offset) {
 
         final var pageDomain = followService.getFolloweesByFollowerName(userName, offset);
 
+        return buildPageFollowResponse(pageDomain);
+    }
+
+    @GetMapping("/followers/{followeeUserName}")
+    public PageResponse<FollowResponse> getFollowersByFollowee(@PathVariable String followeeUserName,
+                                                               @RequestParam long offset) {
+
+        final var pageDomain = followService.getFollowersByFolloweeName(followeeUserName, offset);
+
+        return buildPageFollowResponse(pageDomain);
+    }
+
+    private PageResponse<FollowResponse> buildPageFollowResponse(final PageDomain<Follow> pageDomain) {
         return PageResponse.<FollowResponse>builder()
                 .data(buildFollowResponsesFromDomains(pageDomain.getData()))
                 .limit(pageDomain.getLimit())

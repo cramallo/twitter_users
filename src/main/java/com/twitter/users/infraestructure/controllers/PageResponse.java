@@ -1,4 +1,4 @@
-package com.twitter.users.infraestructure.controllers.shared;
+package com.twitter.users.infraestructure.controllers;
 
 import lombok.Builder;
 import lombok.Value;
